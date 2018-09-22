@@ -42,7 +42,18 @@ const server = net.createServer((client) => {
 					});
 				client.write('DEC');
         	}
-        	
+        	if(arr[0] === "DECODE"){
+        		fileName = path.basename(arr[1]);
+        		var readableStream = fs.createReadStream(arr[1], "utf8");
+        		var writeableStream = fs.createWriteStream(arr[2] + "/decipher" + fileName);
+        			readableStream.on("data", function(chunk){
+        				var decipher = crypto.createDecipher('aes-256-ctr', arr[3])
+        				.update(chunk,'hex','utf8');
+    					writeableStream.write(decipher);
+    					writeableStream.end();
+					});
+				client.write('DEC');
+        	}
    		}
     });
 
