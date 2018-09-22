@@ -31,6 +31,18 @@ const server = net.createServer((client) => {
 					});
 				client.write('DEC');
         	}
+        	if(arr[0] === "ENCODE"){
+        		fileName = path.basename(arr[1]);
+        		var readableStream = fs.createReadStream(arr[1], "utf8");
+        		var writeableStream = fs.createWriteStream(arr[2] + "/cripto" + fileName);
+        			readableStream.on("data", function(chunk){
+        				var cryptoText = crypto.createCipher('aes-256-ctr', arr[3]).update(chunk, 'utf8', 'hex');
+    					writeableStream.write(cryptoText);
+    					writeableStream.end();
+					});
+				client.write('DEC');
+        	}
+        	
    		}
     });
 
